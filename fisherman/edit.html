@@ -1,0 +1,130 @@
+
+
+<div class="clear"></div>
+<div class="row">
+	<div class="overlay hide"></div>
+	<section>
+
+		<form id="fishForm" name="fishForm" action="" method="">
+
+
+			<div class="row">
+				<label for="pound">Boat Name</label> <input type="" class="input"
+					id="boatName" required />
+			</div>
+			<div class="row">
+				<label for="pound">Fisherman Name</label> <input type=""
+					class="input" id="fishermanName" required />
+			</div>
+
+			<div class="row">
+				<label for="pound">Phone </label> <input type="" class="input"
+					id="phone" required />
+			</div>
+
+			<div class="row">
+				<label for="pound">License #</label> <input type="" class="input"
+					id="license" required />
+			</div>
+
+			<div class="row">
+				<label for="pound">Caught Method </label> <select id="method"
+					data-inline="true" data-mini="true" data-icon="arrow-d"
+					data-iconpos="right" data-native-menu="true">
+					<option value="Fishline" selected="selected">Fishline</option>
+					<option value="Net">Net</option>
+				</select>
+			</div>
+
+			<div class="row">
+				<label for="pound">City </label> <select id="city"
+					data-inline="true" data-mini="true" data-icon="arrow-d"
+					data-iconpos="right" data-native-menu="true">
+					<option value="Honolulu, HI" selected="selected">Honolulu,
+						Oahu</option>
+					<option value="Kanehoe, HI">Kanehoe, Oahu</option>
+					<option value="Kahului, HI">Kahului, Maui</option>
+					<option value="Half Moon Bay, San Francisco, CA">Half Moon
+						Bay, San Francisco</option>
+					<option value="Fishermen Wharf, San Francisco, CA">Fishermen
+						Wharf, San Francisco</option>
+					<option value="Sea Port Village, San Diego, CA">Sea Port
+						Village, San Diego</option>
+				</select>
+			</div>
+
+			<div class="row">
+				<label for="pound">Fishing Spot </label> <input type="text" value=""
+					placeholder="FISHING SPOT LATITUDE" id="spotlatitude"
+					data-mini="true" /> <br>
+				<input type="text" value="" placeholder="FISHING SPOT LONGITUDE"
+					id="spotlongitude" data-mini="true" />
+			</div>
+
+			<div class="row">
+				<label for="pound">Selling Address </label> <input type=""
+					class="input" id="address" required />
+			</div>
+
+			<div class="row">
+				<div id="identification"></div>
+			</div>
+
+			<div class="row center">
+				<input type="button" class="submit" value="SAVE" onclick="save();" />
+			</div>
+		</form>
+	</section>
+</div>
+
+<script>
+function getFisherman(boat) {
+
+		var getUrl = "http://fresh.freshfishalerts.appspot.com/getfisherman?boatName=" + boat;
+
+	$.post(getUrl, {}, function(data, status) {
+
+		var fish = jQuery.parseJSON(data);
+
+		$("#id").val(fish.ID);
+		$("#identification").html("Internal App ID: " + fish.ID);
+		$("#boatName").val(fish.boatName);
+		$("#fishermanName").val(fish.fishermanName);
+		$("#license").val(fish.license);
+		$("#method").val(fish.method);
+		$("#city").val(fish.city);
+		$("#address").val(fish.address);
+		$("#spotlatitude").val(fish.spotlatitude);
+		$("#spotlongitude").val(fish.spotlongitude);
+		$("#phone").val(fish.phone);
+	});
+}
+
+	
+	var boat = getUrlParameter("boat");
+	getFisherman(boat);
+
+	function save() {
+
+		var saveUrl = "http://fresh.freshfishalerts.appspot.com/savefisherman?id=" + $("#id").val() + "&boatName="
+				+ encodeURIComponent($("#boatName").val()) + "&fishermanName="
+				+ encodeURIComponent($("#fishermanName").val()) + "&license="
+				+ encodeURIComponent($("#license").val()) + "&phone="
+				+ encodeURIComponent($("#phone").val()) + "&method="
+				+ encodeURIComponent($("#method").val()) + "&spotlatitude="
+				+ encodeURIComponent($("#spotlatitude").val())
+				+ "&spotlongitude="
+				+ encodeURIComponent($("#spotlongitude").val()) + "&address="
+				+ encodeURIComponent($("#address").val()) + "&city="
+				+ encodeURIComponent($("#city").val());
+
+		$.post(saveUrl, {}, function(data, status) {
+			getFisherman(data.trim());
+			alert("Thank you for posting this fisherman.");
+		});
+	}
+</script>
+
+
+
+
