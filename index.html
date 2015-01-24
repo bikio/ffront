@@ -82,7 +82,7 @@
 		var geocoder;
 		var map;
 
-		function codeAddress(address, name) {
+		function codeAddress(address, boat, name) {
 			geocoder.geocode({
 				'address': address
 			}, function(results, status) {
@@ -91,8 +91,14 @@
 					var marker = new google.maps.Marker({
 						map: map,
 						position: results[0].geometry.location,
-						title: name
+						title: boat + ' - ' + name,
+						url: "/?boat=" + boat,
+						animation: google.maps.Animation.DROP
 					});
+					
+					google.maps.event.addListener(marker, 'click', function() {
+     					 window.location.href = marker.url;
+    				});
 				}
 			});
 		}
@@ -115,6 +121,8 @@
 
 			listFish();
 		}
+		
+		
 
 
 		var city = decodeURIComponent(getUrlParameter("city"));
@@ -130,30 +138,19 @@
 					getUrl, {},
 					function(data, status) {
 						var results = jQuery.parseJSON(data);
-						var list = '<table>';
-						var list1 = '<div id="table">';
+						var list = '<div id="table">';
 						$
 							.each(
 								results,
 								function(key, val) {
 
-									list1 += '<div class="row">' 
-									+ '<span class="cell primary" data-label="fisherman" onclick=sales("' + val.boatName + '")>' 
-									+ '<img style="border-radius: 40px;" width=50 height=50 src="' + val.image + '=s50" /></a> ' + val.boatName + ' - '
-									+ val.fishermanName + '</span>'
-									+ '<span class="cell" data-label="count" onclick=sales("' + val.boatName + '")>' + val.address + '</span>' 
-									+ '<span class="cell" data-label="$"></span>' 
-									+ '<span class="cell" data-label="lbs"></span>' + '</div>';
+									list += '<div class="row">' + '<span class="cell primary" data-label="fisherman" onclick=sales("' + val.boatName + '")><a onclick=sales("' + val.boatName + '");>' + '<img style="border-radius: 30px;" width=50 height=50 src="' + val.image + '=s50" /> ' + val.boatName + ' - ' + val.fishermanName + '</a></span>' + '<span class="cell" data-label="count" onclick=sales("' + val.boatName + '")>' + val.address + '</span>' + '<span class="cell" data-label="$"></span>' + '<span class="cell" data-label="lbs"></span>' + '</div>';
 
-									list += '<tr><td>' + '<a onclick=openFishPage("' + val.ID + '");>' + '<img width=70 height=70 src="' + val.image + '=s70" /></a></td>' + '<td><a onclick=openFishPage("' + val.ID + '");><font size=2><b> ' + val.boatName + " - " + val.fishermanName + '<br/> ' + val.address + '<br/> License #' + val.license + '</b></font></a></td></tr>';
-									codeAddress(
-										val.address,
-										val.boatName + " - " + val.fishermanName);
+									codeAddress(val.address, val.boatName, val.fishermanName);
 								});
-						list += '</table>';
-						list1 += '</div>';
+						list += '</div>';
 
-						$("#main").html(list1);
+						$("#main").html(list);
 					});
 		}
 
