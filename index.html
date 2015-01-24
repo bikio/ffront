@@ -15,7 +15,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
-<link rel="stylesheet" type="text/css" href="/css/entry.css">
+	<link rel="stylesheet" type="text/css" href="/css/entry.css">
 	<link rel="stylesheet" type="text/css" href="/css/distribview.css">
 	<link rel="stylesheet" type="text/css" href="/css/responsive-nav.css">
 
@@ -57,13 +57,12 @@
 		}
 
 		if (getUrlParameter("boat") != null && getUrlParameter("boat") != "") {
-			$("#top").empty();
+			$("#top").load("sales.html");
 			$("#googleMap").empty();
-			$("#main").load("sales.html");
+			$("#main").empty();
 		}
 		else {
 			$("#top").load("buyersTop.html");
-			$("#main").load("buyers.html");
 		}
 
 		(function(b, o, i, l, e, r) {
@@ -79,11 +78,7 @@
 		}(window, document, 'script', 'ga'));
 		ga('create', 'UA-XXXXX-X');
 		ga('send', 'pageview');
-	</script>
 
-
-
-	<script>
 		var geocoder;
 		var map;
 
@@ -136,22 +131,34 @@
 					function(data, status) {
 						var results = jQuery.parseJSON(data);
 						var list = '<table>';
+						var list1 = '<div id="table">';
 						$
 							.each(
 								results,
 								function(key, val) {
+
+									list1 += '<div class="row">' 
+									+ '<span class="cell primary" data-label="fisherman" onclick=sales("' + val.boatName + '")>' 
+									+ '<img style="border-radius: 40px;" width=50 height=50 src="' + val.image + '=s50" /></a> ' + val.boatName + ' - '
+									+ val.fishermanName + '</span>'
+									+ '<span class="cell" data-label="count" onclick=sales("' + val.boatName + '")>' + val.address + '</span>' 
+									+ '<span class="cell" data-label="$"></span>' 
+									+ '<span class="cell" data-label="lbs"></span>' + '</div>';
+
 									list += '<tr><td>' + '<a onclick=openFishPage("' + val.ID + '");>' + '<img width=70 height=70 src="' + val.image + '=s70" /></a></td>' + '<td><a onclick=openFishPage("' + val.ID + '");><font size=2><b> ' + val.boatName + " - " + val.fishermanName + '<br/> ' + val.address + '<br/> License #' + val.license + '</b></font></a></td></tr>';
 									codeAddress(
 										val.address,
 										val.boatName + " - " + val.fishermanName);
 								});
 						list += '</table>';
-						$("#fishlist").html(list);
+						list1 += '</div>';
+
+						$("#main").html(list1);
 					});
 		}
 
-		function openFishPage(id) {
-			window.location.href = "showfisherman.jsp?id=" + id;
+		function sales(boat) {
+			window.location.href = "?boat=" + boat;
 		}
 
 		if (getUrlParameter("boat") == null || getUrlParameter("boat") == "") {
