@@ -45,6 +45,12 @@
 <script>
 
 var lineFishForm = 0;
+var boat = getUrlParameter("boat");
+var date = getUrlParameter("date");
+
+if (date == null || date=='') {
+	date = getDate(new Date());
+}
 
 function listFish(id) {
 	
@@ -87,6 +93,10 @@ function listFish(id) {
 					});
 }
 
+	function dateChange() {
+		window.location.href = "?boat=" + encodeURIComponent(boat) + "&date=" + encodeURIComponent($("#datePicker").val());
+	}
+
 	function getFisherman(boat) {
 	
 		var getUrl = "http://fresh.freshfishalerts.appspot.com/getfisherman?boatName=" + boat;
@@ -104,12 +114,12 @@ function listFish(id) {
 					+'</button>');
 	
 
-			$("#fisher-info").html('<input type="date" class="date" id="datePicker" onchange="listFish('+id+')" />'+
+			$("#fisher-info").html('<input type="date" class="date" id="datePicker" onchange="dateChange();" />'+
 					'<p><a href="https://www.google.com/maps/place/'+result.address + ', ' + result.city+'" target="_blank">'
 					+ result.address+ ', ' + result.city + '</a><br/>' +
 					 result.phone+'</p>');
 			
-			$("#datePicker").val(getDate(new Date()));
+			$("#datePicker").val(date);
 			
 			listFish(result.ID);
 		});
@@ -186,8 +196,7 @@ function listFish(id) {
 		$("#quantitySelectDiv").append(quantityField);
 	}
 	
-	var boat = getUrlParameter("boat");
-	var date = getUrlParameter("date");
+
 
 	getFisherman(boat);
 
@@ -196,6 +205,8 @@ function listFish(id) {
 		lineFishForm++;
 		showFishForm(lineFishForm);
 	}
+	
+
 
 	function saveFish(lineNumber) {
 
