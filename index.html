@@ -86,19 +86,21 @@
 			geocoder.geocode({
 				'address': address
 			}, function(results, status) {
+
 				if (status == google.maps.GeocoderStatus.OK) {
+					
 					//map.setCenter(results[0].geometry.location);
 					var marker = new google.maps.Marker({
 						map: map,
 						position: results[0].geometry.location,
 						title: boat + ' - ' + name,
-						url: "/?boat=" + boat,
+						url: "/?boat=" + encodeURIComponent(boat),
 						animation: google.maps.Animation.DROP
 					});
-					
+
 					google.maps.event.addListener(marker, 'click', function() {
-     					 window.location.href = marker.url;
-    				});
+						window.location.href = marker.url;
+					});
 				}
 			});
 		}
@@ -121,8 +123,8 @@
 
 			listFish();
 		}
-		
-		
+
+
 
 
 		var city = decodeURIComponent(getUrlParameter("city"));
@@ -137,6 +139,7 @@
 				.post(
 					getUrl, {},
 					function(data, status) {
+		
 						var results = jQuery.parseJSON(data);
 						var list = '<div id="table">';
 						$
@@ -144,9 +147,14 @@
 								results,
 								function(key, val) {
 
-									list += '<div class="row">' + '<span class="cell primary" data-label="fisherman" onclick=sales("' + val.boatName + '")><a onclick=sales("' + val.boatName + '");>' + '<img style="border-radius: 30px;" width=50 height=50 src="' + val.image + '=s50" /> ' + val.boatName + ' - ' + val.fishermanName + '</a></span>' + '<span class="cell" data-label="count" onclick=sales("' + val.boatName + '")>' + val.address + '</span>' + '<span class="cell" data-label="$"></span>' + '<span class="cell" data-label="lbs"></span>' + '</div>';
+									list += '<div class="row"><span class="cell primary" data-label="fisherman" onclick=sales("'+encodeURIComponent(val.boatName)+'");>'
+									+'<img style="border-radius: 30px;" width=30 height=30 src="' + val.image + '=s30" /> '
+									+ val.boatName + ' - ' + val.fishermanName +'</span>' 
+									+ '<span class="cell" data-label="count" onclick=sales("'+encodeURIComponent(val.boatName)+'");>' 
+									+ val.address + '</span>' + '<span class="cell" data-label="$"></span>' 
+									+ '<span class="cell" data-label="lbs"></span>' + '</div>';
 
-									codeAddress(val.address, val.boatName, val.fishermanName);
+									codeAddress(val.address + " " + val.city, val.boatName, val.fishermanName);
 								});
 						list += '</div>';
 
@@ -155,7 +163,7 @@
 		}
 
 		function sales(boat) {
-			window.location.href = "?boat=" + boat;
+			window.location.href = "?boat=" + encodeURIComponent(boat);
 		}
 
 		if (getUrlParameter("boat") == null || getUrlParameter("boat") == "") {
