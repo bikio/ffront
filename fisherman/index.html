@@ -65,9 +65,10 @@
 			</div>
 			<div id="navbar" class="collapse navbar-collapse">
 				<ul class="nav navbar-nav">
-					<li><a href="#" onclick="fish()">Input</a></li>
-					<li><a href="#" onclick="sales()">Sales</a></li>
-					<li><a href="#" onclick="edit()">Info</a></li>
+					<li><a href="#" onclick="edit()">Account</a></li>
+					<li><a href="#" onclick="fish()">Input Fish</a></li>
+					<li><a href="#" onclick="sales()">Your Sales</a></li>
+					<li><a href="#" onclick="map()">Fish Map</a></li>
 					<li><a href="#" onclick="logout()">Logout</a></li>
 				</ul>
 			</div>
@@ -138,22 +139,16 @@
 
 		if (getUrlParameter("edit") != null && getUrlParameter("edit") != "") {
 
-			$("#main").load("addFisherman.jsp", "id=" + getUrlParameter("id"));
+			$("#main").load("edit.html");
 
 		} else if (getUrlParameter("id") != null && getUrlParameter("id") != "") {
 
 			$("#main").load("inventory.jsp", "id=" + getUrlParameter("id"));
 
-		} else if (getUrlParameter("fishermanid") != null
-				&& getUrlParameter("fishermanid") != "") {
-
-			$("#main").load("fisherman.jsp",
-					"id=" + getUrlParameter("fishermanid"));
-
-		} else if (getUrlParameter("boat") != null
+		}  else if (getUrlParameter("boat") != null
 				&& getUrlParameter("boat") != "") {
 
-			$("#main").load("fisherman.jsp", "boat=" + getUrlParameter("boat"));
+			$("#main").load("fisherman.html");
 
 		} else {
 
@@ -161,7 +156,7 @@
 		}
 
 		function fish() {
-			$("#main").load("fisherman.jsp", "boat=" + getUrlParameter("boat"));
+			$("#main").load("fisherman.html");
 		}
 
 		function sales() {
@@ -172,12 +167,16 @@
 		}
 
 		function edit() {
-			$("#main").load("addFisherman.jsp", "id=" + $("#id").val());
+			$("#main").load("edit.html");
 		}
 
 		function logout() {
 			document.cookie = "boatName=;";
 			window.location.href = './landing.html';
+		}
+		
+		function map() {
+			window.location.href = 'http://freshr.io';
 		}
 	</script>
 
