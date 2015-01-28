@@ -42,6 +42,25 @@
 
 <body>
 
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#" onclick="fishMap()">Back</a>
+			</div>
+			<div id="navbar" class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="#" onclick="openFisherman()">I'm a Fisherman</a>
+					</li>
+					<li><a href="#" onclick="openDistributor()">I'm a Distributor</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
 	<div id="top"></div>
 
 	<div id="googleMap"></div>
@@ -49,6 +68,28 @@
 	<div id="main"></div>
 
 	<script>
+		$('.navbar-toggle').click(function() {
+			if ($('#navbar').hasClass('collapse')) {
+				$('#navbar').removeClass('collapse');
+			}
+			else {
+				$('#navbar').addClass('collapse');
+			}
+		});
+
+		function fishMap() {
+			window.location.href = './';
+		}
+
+		function openFisherman() {
+			window.location.href = './fisherman/';
+		}
+
+		function openDistributor() {
+			window.location.href = './fisherman/';
+		}
+
+
 		function getUrlParameter(urlParameterName) {
 			if (urlParameterName = (new RegExp('[?&]' + encodeURIComponent(urlParameterName) + '=([^&]*)'))
 				.exec(location.search)) {
@@ -88,7 +129,7 @@
 			}, function(results, status) {
 
 				if (status == google.maps.GeocoderStatus.OK) {
-					
+
 					//map.setCenter(results[0].geometry.location);
 					var marker = new google.maps.Marker({
 						map: map,
@@ -139,7 +180,7 @@
 				.post(
 					getUrl, {},
 					function(data, status) {
-		
+
 						var results = jQuery.parseJSON(data);
 						var list = '<div id="table">';
 						$
@@ -147,12 +188,7 @@
 								results,
 								function(key, val) {
 
-									list += '<div class="row"><span class="cell primary" data-label="fisherman" onclick=sales("'+encodeURIComponent(val.boatName)+'");>'
-									+'<img style="border-radius: 30px;" width=30 height=30 src="' + val.image + '=s30" /> '
-									+ val.boatName + ' - ' + val.fishermanName +'</span>' 
-									+ '<span class="cell" data-label="count" onclick=sales("'+encodeURIComponent(val.boatName)+'");>' 
-									+ val.address + '</span>' + '<span class="cell" data-label="$"></span>' 
-									+ '<span class="cell" data-label="lbs"></span>' + '</div>';
+									list += '<div class="row"><span class="cell primary" data-label="fisherman" onclick=sales("' + encodeURIComponent(val.boatName) + '");>' + '<img style="border-radius: 30px;" width=30 height=30 src="' + val.image + '=s30" /> ' + val.boatName + ' - ' + val.fishermanName + '</span>' + '<span class="cell" data-label="count" onclick=sales("' + encodeURIComponent(val.boatName) + '");>' + val.address + '</span>' + '<span class="cell" data-label="$"></span>' + '<span class="cell" data-label="lbs"></span>' + '</div>';
 
 									codeAddress(val.address + " " + val.city, val.boatName, val.fishermanName);
 								});
