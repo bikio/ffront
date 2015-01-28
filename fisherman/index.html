@@ -156,10 +156,12 @@
 		}
 
 		function fish() {
+			$('#navbar').addClass('collapse');
 			$("#main").load("fisherman.html");
 		}
 
 		function sales() {
+			$('#navbar').addClass('collapse');
 			$("#main").load(
 					"inventory.jsp",
 					"id=" + $("#id").val() + '&date='
@@ -167,6 +169,7 @@
 		}
 
 		function edit() {
+			$('#navbar').addClass('collapse');
 			$("#main").load("edit.html");
 		}
 
