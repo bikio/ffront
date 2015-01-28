@@ -12,6 +12,12 @@ body {
 
 	padding-top: 70px;
 }
+
+a:hover {
+  text-decoration: none !important;
+  color: lightblue !important;
+}
+
 @media (max-width: 2000px) {
 .navbar-header {
 		float: none;
