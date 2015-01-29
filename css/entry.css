@@ -89,12 +89,10 @@ a:hover {
 		color: #5A6CA3;
 	}
 	.biohead img {
-		/*height: 85px;*/
-		
-		border-radius: 60px;
-		width: 80px;
+		height: 85px;
+		border-radius: 90%;
+		width: 85px;
 		display: inline-block;
-		padding-top: 3%;
 		vertical-align: middle;
 		margin: 0 5px;
 	}
@@ -209,10 +207,9 @@ a:hover {
 		/*box-shadow: 0 0 15px rgba(0, 0, 0, .2);*/
 	}
 	.biohead img {
-		/*height: 75px;*/
-		
-		border-radius: 60px;
-		width: 80px;
+		height: 85px;
+		border-radius: 90%;
+		width: 85px;
 		display: inline-block;
 		vertical-align: middle;
 		margin: 0 5px;
