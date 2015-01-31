@@ -1,0 +1,237 @@
+
+<input type="hidden" id="id" />
+
+<div class="biohead" id=fishermanName></div>
+
+<div class="sale">
+	<div id=fisher-info></div>
+</div>
+
+<div class="catch">
+	<div class="fish">
+		<h4>fish</h4>
+		<div id=fishSelectDiv></div>
+	</div>
+
+	<div class="fish" >
+		<h4>lbs</h4>
+		<div id=rangeSelectDiv></div>
+	</div>
+
+	<div class="fish" >
+			<select id="priceType" >
+				<option value="$/lb" selected>$/lb</option>
+				<option value="$/fish">$/fish</option>
+			</select><br/>&nbsp;
+		<div id=priceSelectDiv></div>
+	</div>
+
+	<div class="fish">
+		<h4>qty</h4>
+		<div id=quantitySelectDiv></div>
+	</div>
+</div>
+
+
+<div class="add" align=left>
+	<a href="#"><img src="/images/add.png" onclick="addFishLine();"></a>
+</div>
+
+<div class="upload" id="sales">
+	<a href="#" onclick="sales();"> sales </a>
+</div>
+
+
+<script>
+
+var lineFishForm = 0;
+var distributor = getUrlParameter("distributor");
+var date = getUrlParameter("date");
+
+if (date == null || date=='') {
+	date = getDate(new Date());
+}
+
+function listFish(id) {
+
+	$("#fishSelectDiv").html('');
+	$("#rangeSelectDiv").html('');
+	$("#priceSelectDiv").html('');
+	$("#quantitySelectDiv").html('');
+	
+	var getUrl = "http://fresh.freshfishalerts.appspot.com/listfish?distributor=" + id + "&date=" + encodeURIComponent($("#datePicker").val());
+
+	$
+			.post(
+					getUrl,
+					{},
+					function(data, status) {
+						
+						var results = jQuery.parseJSON(data);
+						var i=0;
+						$
+								.each(
+										results,
+										function(key, val) {
+											
+											i++;
+											showFishForm(i);
+											
+											$("#fish"+i).val(val.fish);
+											$("#weight"+i).val(val.weight);
+											$("#price"+i).val(val.price);
+											$("#quantity"+i).val(val.quantity);
+											
+											$("#priceType").val(val.priceType);
+													
+										});
+						
+					
+						for (lineFishForm = i+1; lineFishForm < 6; lineFishForm++) {
+							showFishForm(lineFishForm);
+						}
+					});
+}
+
+	function dateChange() {
+		window.location.href = "?distributor=" + encodeURIComponent(distributor) + "&date=" + encodeURIComponent($("#datePicker").val());
+	}
+
+	function getDistributor(distributor) {
+	
+		var getUrl = "http://fresh.freshfishalerts.appspot.com/getdistributor?distributor=" + distributor;
+
+		$.post(getUrl, {}, function(data, status) {
+
+			var result = jQuery.parseJSON(data);
+
+			$("#id").val(result.ID);
+			
+			$("#fishermanName").html(	'<img src="'+ result.image + '=s74"  width="74" />' 
+					+ '<p>' + result.distributor + '<br/>' +result.contactName+'</p>'
+					+ '	<button class="edit">' +
+					'<img src="/images/ico-edit.png" border=0 alt="Edit" style="width:20px;height:20px;" onclick="edit();"/>'
+					+'</button>');
+	
+
+			$("#fisher-info").html('<input type="date" class="date" id="datePicker" onchange="dateChange();" />'+
+					'<p><a href="https://www.google.com/maps/place/'+result.address + ', ' + result.city+'" target="_blank">'
+					+ result.address+ ', ' + result.city + '</a><br/>' +
+					 result.phone+'</p>');
+			
+			$("#datePicker").val(date);
+			
+			listFish(result.ID);
+		});
+	}
+	
+
+	
+	function showFishForm(lineNumber) {
+		
+		$("#fishSelectDiv").append('<input type=hidden id=fishID'+lineNumber+'></input>');
+
+		var fishSelect =  '<select style="height:25px;" id="fish'+lineNumber+'" onchange="saveFish('+lineNumber+')">'
+				+ '<option value="Ahi">Ahi</option>'
+				+ '<option value="Mahi">Mahi</option>'
+				+ '<option value="Aku">Aku</option>'
+				+ '<option value="Monchong">Mchg</option>'
+				+ '<option value="Ono">Ono</option>'
+				+ '<option value="Hebi">Hebi</option>'
+				+ '<option value="Marlin">Mrln</option>'
+				+ '</select><br/><br/>';
+				
+				$("#fishSelectDiv").append(fishSelect);
+
+		var rangeSelect = '<select style="height:25px;" id="weight'+lineNumber+'" onchange="saveFish('+lineNumber+')">' 
+		+ '<option value="0">0-5</option>'
+				+ '<option value="5">5-10</option>'
+				+ '<option value="10">10-20</option>'
+				+ '<option value="20">20-30</option>'
+				+ '<option value="30">30-40</option>'
+				+ '<option value="40">40-50</option>'
+				+ '<option value="50">50+</option>' + '</select><br/><br/>';
+				
+				$("#rangeSelectDiv").append(rangeSelect);
+
+		var priceSelect = '<select style="height:25px;" id="price'+lineNumber+'" onchange="saveFish('+lineNumber+')">'
+		+ '<option value="0.5">$0.5</option>'
+				+ '<option value="1">$1</option>'
+				+ '<option value="1.5">$1.5</option>'
+				+ '<option value="2">$2</option>'
+				+ '<option value="2.5">$2.5</option>'
+				+ '<option value="3">$3</option>'
+				+ '<option value="3.5">$3.5</option>'
+				+ '<option value="4">$4</option>'
+				+ '<option value="4.5">$4.5</option>'
+				+ '<option value="5">$5</option>'
+				+ '<option value="5.5">$5.5</option>'
+				+ '<option value="6">$6</option>'
+				+ '<option value="6.5">$6.5</option>'
+				+ '<option value="7">$7</option>'
+				+ '<option value="7.5">$7.5</option>'
+				+ '<option value="8">$8</option>'
+				+ '<option value="8.5">$8.5</option>'
+				+ '<option value="9">$9</option>'
+				+ '<option value="10">$10</option>'
+				+ '<option value="12.5">$12.5</option>' 
+				+ '<option value="15">$15</option>'
+				+ '<option value="20">$20</option>' 
+				+ '<option value="25">$25</option>'
+				+ '<option value="30">$30</option>' 
+				+ '<option value="35">$35</option>'
+				+ '<option value="40">$40</option>' 
+				+ '<option value="45">$45</option>'
+				+ '<option value="50">$50</option>'
+				+ '<option value="55">$55</option>'
+				+ '<option value="60">$60</option>' 
+				+ '<option value="65">$65</option>'
+				+ '<option value="70">$70</option>'
+				+ '<option value="75">$75+</option>'
+				+ '</select><br/><br/>';
+				
+				$("#priceSelectDiv").append(priceSelect);
+
+		var quantityField = '<input type=number style="width:60px;height:25px;" value=0 id=quantity'+lineNumber+' onchange="saveFish('+lineNumber+')"></input><br/><br/>';
+		$("#quantitySelectDiv").append(quantityField);
+	}
+	
+
+
+	getDistributor(distributor);
+
+
+	function addFishLine() {
+		lineFishForm++;
+		showFishForm(lineFishForm);
+	}
+	
+
+
+	function saveFish(lineNumber) {
+
+		var saveUrl = "/savefish?id="
+				+ encodeURIComponent($("#fishID" + lineNumber).val())
+				+ "&distributorID=" + encodeURIComponent($("#id").val())
+				+ "&date=" + encodeURIComponent($("#datePicker").val())
+				+ "&city=" + encodeURIComponent($("#city").val()) + "&address="
+				+ encodeURIComponent($("#address").val()) + "&method="
+				+ encodeURIComponent($("#method").val())  + "&fish="
+				+ encodeURIComponent($("#fish" + lineNumber).val())
+				+ "&weight="
+				+ encodeURIComponent($("#weight" + lineNumber).val())
+				+ "&price="
+				+ encodeURIComponent($("#price" + lineNumber).val())
+				+ "&priceType="
+				+ encodeURIComponent($("#priceType").val())
+				+ "&quantity="
+				+ encodeURIComponent($("#quantity" + lineNumber).val())
+				+ "&order=" + lineNumber;
+
+		$.post(saveUrl, {}, function(data, status) {
+			//alert("Thank you for posting your fish on our app!");
+			$("#fishID" + lineNumber).val(data.trim());
+			//listFish(id);
+		});
+	}
+</script>
