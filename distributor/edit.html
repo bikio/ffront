@@ -10,6 +10,11 @@
 
 				<input type="hidden" id="id" />
 
+				<div class="row center">
+					<input type="button" class="btn" value="Image" onclick=uploadphoto(); />
+				</div>
+				<br>
+
 				<div class="row">
 					<label for="pound">Distributor Company</label>
 					<input type="" class="input" id="distributor" required />
@@ -59,8 +64,10 @@
 					<div id="identification"></div>
 				</div>
 
+				<br>
+
 				<div class="row center">
-					<input type="button" class="submit" value="SAVE" onclick=save(); />
+					<input type="button" class="btn" value="SAVE" onclick=save(); />
 				</div>
 			</form>
 		</section>
@@ -68,7 +75,7 @@
 </div>
 
 <script>
-	function getDistributor(boat) {
+	function getDistributor(distributor) {
 
 		var getUrl = "http://fresh.freshfishalerts.appspot.com/getdistributor?distributor=" + distributor;
 
@@ -79,7 +86,7 @@
 			$("#id").val(fish.ID);
 			$("#identification").html("Internal App ID: " + fish.ID);
 			$("#distributor").val(fish.distributor);
-			$("#contactName").val(fish.contactnName);
+			$("#contactName").val(fish.contactName);
 			$("#email").val(fish.email);
 			$("#method").val(fish.method);
 			$("#city").val(fish.city);
@@ -94,18 +101,16 @@
 
 	function save() {
 
-		var saveUrl = "http://fresh.freshfishalerts.appspot.com/savedistributor?id=" + $("#id").val() 
-		+ "&distributor=" + encodeURIComponent($("#distributor").val()) 
-		+ "&contactName=" + encodeURIComponent($("#contactName").val()) 
-		+ "&email=" + encodeURIComponent($("#email").val()) 
-		+ "&phone=" + encodeURIComponent($("#phone").val()) 
-		+ "&method=" + encodeURIComponent($("#method").val()) 
-		+ "&address=" + encodeURIComponent($("#address").val()) 
-		+ "&city=" + encodeURIComponent($("#city").val());
+		var saveUrl = "http://fresh.freshfishalerts.appspot.com/savedistributor?id=" + $("#id").val() + "&distributor=" + encodeURIComponent($("#distributor").val()) + "&contactName=" + encodeURIComponent($("#contactName").val()) + "&email=" + encodeURIComponent($("#email").val()) + "&phone=" + encodeURIComponent($("#phone").val()) + "&method=" + encodeURIComponent($("#method").val()) + "&address=" + encodeURIComponent($("#address").val()) + "&city=" + encodeURIComponent($("#city").val());
 
 		$.post(saveUrl, {}, function(data, status) {
 			getDistributor(data.trim());
 			alert("Information successfully saved. Thank you.");
 		});
+	}
+
+	function uploadphoto() {
+		window.location.href = 'http://freshr.io/distributor/uploadimage.jsp?id='
+				+ $("#id").val();
 	}
 </script>
