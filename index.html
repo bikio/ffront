@@ -32,11 +32,20 @@
 
 
 	<script src="/css/responsive-nav.js"></script>
-	<script>
-		var nav = responsiveNav(".nav-collapse");
-	</script>
+
 
 	<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDY0kkJiTPVd2U7aTOAwhc9ySH6oHxOIYM&sensor=false"></script>
+
+	<script src="./utilities.js"></script>
+	<script>
+		var nav = responsiveNav(".nav-collapse");
+
+		(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+		ga('create', 'UA-59204009-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
 
 </head>
 
@@ -66,6 +75,7 @@
 	<div id="googleMap"></div>
 
 	<div id="main"></div>
+	<div id="listdistributors"></div>
 
 	<script>
 		$('.navbar-toggle').click(function() {
@@ -86,39 +96,59 @@
 		}
 
 		function openDistributor() {
-			window.location.href = './fisherman/';
+			window.location.href = './distributor/';
 		}
 
 
-		function getUrlParameter(urlParameterName) {
-			if (urlParameterName = (new RegExp('[?&]' + encodeURIComponent(urlParameterName) + '=([^&]*)'))
-				.exec(location.search)) {
-				return decodeURIComponent(urlParameterName[1]);
-			}
+		function getUser(email) {
+
+			var getUrl = "http://fresh.freshfishalerts.appspot.com/getuser?email=" + email;
+
+			$.post(getUrl, {}, function(data, status) {
+
+				var result = jQuery.parseJSON(data);
+
+				if ("fisherman" == result.usertype) {
+					window.location.href = './fisherman/';
+				}
+				else
+				if ("distributor" == result.usertype) {
+					window.location.href = './distributor/';
+				}
+
+
+
+			});
 		}
 
-		if (getUrlParameter("boat") != null && getUrlParameter("boat") != "") {
+
+		if (getUrlParameter("email") != null && getUrlParameter("email") != "") {
+			getUser(getUrlParameter("email"));
+		}
+
+
+		if (getUrlParameter("sales") != null && getUrlParameter("sales") != "") {
+			window.location.href = "boatsales.html?sales=" + encodeURIComponent(getUrlParameter("sales"));
+		}
+		else if (getUrlParameter("boat") != null && getUrlParameter("boat") != "") {
 			$("#top").load("sales.html");
 			$("#googleMap").empty();
 			$("#main").empty();
 		}
+		else
+		if (getUrlParameter("distributorsales") != null && getUrlParameter("distributorsales") != "") {
+			$("#top").load("distributorsales.html");
+			$("#googleMap").empty();
+			$("#main").empty();
+		}
+		else if ((getUrlParameter("email") == null || getUrlParameter("email") == "") && getCookie("email") != '') {
+			window.location.href = './?email=' + getCookie("email");
+		}
+
 		else {
 			$("#top").load("buyersTop.html");
 		}
 
-		(function(b, o, i, l, e, r) {
-			b.GoogleAnalyticsObject = l;
-			b[l] || (b[l] = function() {
-				(b[l].q = b[l].q || []).push(arguments)
-			});
-			b[l].l = +new Date;
-			e = o.createElement(i);
-			r = o.getElementsByTagName(i)[0];
-			e.src = '//www.google-analytics.com/analytics.js';
-			r.parentNode.insertBefore(e, r)
-		}(window, document, 'script', 'ga'));
-		ga('create', 'UA-XXXXX-X');
-		ga('send', 'pageview');
 
 		var geocoder;
 		var map;
@@ -162,18 +192,16 @@
 
 			map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
 
-			listFish();
+			listFisherman();
+			listDistributors();
 		}
-
-
-
 
 		var city = decodeURIComponent(getUrlParameter("city"));
 		if (city == null || city == "" || city == "undefined") {
 			city = "Honolulu, HI";
 		}
 
-		function listFish() {
+		function listFisherman() {
 			var getUrl = "http://fresh.freshfishalerts.appspot.com/listfisherman?city=" + city;
 
 			$
@@ -198,11 +226,48 @@
 					});
 		}
 
-		function sales(boat) {
-			window.location.href = "?boat=" + encodeURIComponent(boat);
+		function listDistributors() {
+			var getUrl = "http://fresh.freshfishalerts.appspot.com/listdistributors?city=" + city;
+
+			$
+				.post(
+					getUrl, {},
+					function(data, status) {
+
+						var results = jQuery.parseJSON(data);
+						var list = '<div id="table">';
+						$
+							.each(
+								results,
+								function(key, val) {
+
+									list += '<div class="row"><span class="cell primary" data-label="fisherman" onclick=distributorsales("' + encodeURIComponent(val.distributor) + '");>' + '<img style="border-radius: 30px;" width=30 height=30 src="' + val.image + '=s30" /> ' + val.distributor + '</span>' + '<span class="cell" data-label="count" onclick=distributorsales("' + encodeURIComponent(val.distributor) + '");>' + val.address + '</span>' + '<span class="cell" data-label="$"></span>' + '<span class="cell" data-label="lbs"></span>' + '</div>';
+
+									codeAddress(val.address + " " + val.city, val.distributor, val.contactName);
+								});
+						list += '</div>';
+
+						$("#listdistributors").html(list);
+					});
 		}
 
-		if (getUrlParameter("boat") == null || getUrlParameter("boat") == "") {
+		function sales(boat) {
+			var url = "?boat=" + encodeURIComponent(boat);
+			if (getUrlParameter("distributor") != null && getUrlParameter("distributor") != "") {
+				url += "&distributor=" + getUrlParameter("distributor");
+			}
+			window.location.href = url;
+		}
+
+		function distributorsales(distributorsales) {
+			var url = "?distributorsales=" + encodeURIComponent(distributorsales);
+			if (getUrlParameter("distributor") != null && getUrlParameter("distributor") != "") {
+				url += "&distributor=" + getUrlParameter("distributor");
+			}
+			window.location.href = url;
+		}
+
+		if ((getUrlParameter("boat") == null || getUrlParameter("boat") == "") && (getUrlParameter("distributorsales") == null || getUrlParameter("distributorsales") == "")) {
 			google.maps.event.addDomListener(window, 'load', initialize);
 		}
 	</script>
