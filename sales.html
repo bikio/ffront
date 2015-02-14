@@ -10,73 +10,50 @@
 
 
 <script>
+	function getFisherman(boat, date) {
 
-function timestampToDate(timestamp) {
-	if (timestamp != null && timestamp != ""
-			&& timestamp != "undefined") {
-		var date = new Date(timestamp * 1);
-		var months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
-				'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ];
-		var year = date.getFullYear();
-		var month = months[date.getMonth()];
-		var day = date.getDate();
-		var hour = date.getHours();
-		var min = date.getMinutes();
-		var sec = date.getSeconds();
-
-		if (min < 10)
-			min = "0" + min;
-
-		var weekday = [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ];
-		var n = weekday[date.getDay()];
-
-		var time = n + ', ' + month + '/' + day + '/' + year + ' '
-				+ hour + ':' + min;
-
-		return time;
-	} else {
-		return "";
-	}
-}
-
-	function getFisherman(id, boatName, date) {
-	
-		var getUrl = "http://fresh.freshfishalerts.appspot.com/getfisherman?boatName=" + boatName;
+		var getUrl = "http://fresh.freshfishalerts.appspot.com/getfisherman?boatName=" + boat;
 
 		$
-				.post(
-						getUrl,
-						{},
-						function(data, status) {
-							
-							var result = jQuery.parseJSON(data);
+			.post(
+				getUrl, {},
+				function(data, status) {
 
-							$("#id").val(result.ID);
+					var result = jQuery.parseJSON(data);
 
-							$("#fishermanName").html(
-									'<img src="'+ result.image + '=s74"  width="74" />'
-											+ '<p>' + result.fishermanName
-											+ '<br/>' + result.boatName
-											+ '</p>');
+					$("#id").val(result.ID);
 
-							$("#fisher-info")
-									.html(
-											date
-													+ '<br/>'
-													+ '<a href="https://www.google.com/maps/place/'+result.address + ', ' + result.city+'" target="_blank">'
-													+ result.address + ', '
-													+ result.city + '</a><br/>'
-													+ result.phone);
+					$("#fishermanName").html(
+						'<img src="' + result.image + '=s74"  width="74" />' + '<p>' + result.fishermanName + '<br/>' + result.boatName + '</p>');
 
-							listFish(result.ID, date);
-						});
+					$("#fisher-info")
+						.html(
+							date + '<br/>' + '<a href="https://www.google.com/maps/place/' + result.address + ', ' + result.city + '" target="_blank">' + result.address + ', ' + result.city + '</a><br/>' + result.phone);
+
+					listFish(result.ID, date);
+				});
+	}
+
+	function buyFish(fishID, fishermanID, city, fish, weight, price, priceType, quantity) {
+
+		var parameters = "?id=" + "&fishermanfishID=" + fishID + "&fishermanID=" + fishermanID + "&distributorID=" + encodeURIComponent(getUrlParameter("distributor")) + "&distributordate=" + encodeURIComponent(date) + "&city=" + encodeURIComponent(city) + "&fish=" + encodeURIComponent(fish) + "&weight=" + encodeURIComponent(weight) + "&price=" + encodeURIComponent(price) + "&priceType=" + encodeURIComponent(priceType) + "&quantity=" + encodeURIComponent(quantity);
+
+		if ((getUrlParameter("email") == null || getUrlParameter("email") == "")) {
+			window.location.href = './email.html' + parameters;
+		}
+		else {
+
+			var saveUrl = "http://fresh.freshfishalerts.appspot.com/savefishdistributor" + parameters;
+
+			$.post(saveUrl, {}, function(data, status) {
+				alert("Thank you for buying this fish.");
+			});
+		}
 	}
 
 	function listFish(id, date) {
 
-		var fishList = '<table><thead><tr>' + '<th>fish</th>'
-				+ '<th>size(lb)</th>' + '<th><div id=priceType></div></th>'
-				+ '<th>qty</th>' + '</tr></thead><tbody>';
+		var fishList = '<table><thead><tr>' + '<th>fish</th>' + '<th>size(lb)</th>' + '<th><div id=priceType></div></th>' + '<th>qty</th>' + '</tr></thead><tbody>';
 
 		var getUrl = "http://fresh.freshfishalerts.appspot.com/listfish?fisherman=" + id + "&date=" + date;
 		$.post(getUrl, {}, function(data, status) {
@@ -90,9 +67,9 @@ function timestampToDate(timestamp) {
 
 				priceType = val.priceType;
 
-				fishList += '<tr><td>' + val.fish + '</td><td>' + val.weight
-						+ '</td><td>$' + val.price + '</td><td>' + val.quantity
-						+ '</td></tr>';
+				var buyFishCall = 'buyFish("' + val.fishID + '","' + val.fishermanID + '","' + val.city + '","' + val.fish + '","' + val.weight + '","' + val.price + '","' + val.priceType + '","' + val.quantity + '");';
+
+				fishList += '<tr><td>' + val.fish + '</td><td>' + val.weight + '</td><td>$' + val.price + '</td><td>' + val.quantity + '</td><td>' + '<img src="/images/cart.png" onclick=' + buyFishCall + '></td></tr>';
 
 				if (lastUpdate < val.timestamp) {
 					lastUpdate = val.timestamp;
@@ -104,30 +81,18 @@ function timestampToDate(timestamp) {
 			$("#fishList").html(fishList);
 			$("#priceType").html(priceType);
 			$("#fisher-info").append(
-					'<br/>last update: ' + timestampToDate(lastUpdate));
+				'<br/>last update: ' + timestampToDate(lastUpdate));
 		});
 	}
 
-	function getDate(date) {
 
-		var day = date.getDate();
-		var month = date.getMonth() + 1;
-		var year = date.getFullYear();
-
-		if (month < 10)
-			month = "0" + month;
-		if (day < 10)
-			day = "0" + day;
-
-		return (year + "-" + month + "-" + day);
-	}
-	
 	var boat = getUrlParameter("boat");
+	var distributor = getUrlParameter("distributor");
 	var date = getUrlParameter("date");
 
 	if (date == null || date == 'null' || date == "" || date == "undefined") {
 		date = getDate(new Date());
 	}
 
-	getFisherman(id, boat, date);
+	getFisherman(boat, date);
 </script>
