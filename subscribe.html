@@ -1,0 +1,179 @@
+<div class="edit" style=" margin: 5%; ">
+
+	<div class="row">
+		<label for="pound">Your Name &nbsp;</label>
+		<input type="" class="input" id="contactName" required />
+	</div>
+
+	<div class="row">
+		<label for="pound">Email &nbsp;</label>
+		<input type="" class="input" id="email" style="width:200px;" required />
+	</div>
+
+	<br>
+
+	<div class="row">
+		<input type="checkbox" class="input" id="ahi" />&nbsp;
+		<label for="pound"> Ahi Whole Fish (US$3.5/lb)</label>
+		<br>
+		<input type="checkbox" class="input" id="mahi" />&nbsp;
+		<label for="pound"> Mahi Whole Fish (US$4/lb)</label>
+		<br>
+		<input type="checkbox" class="input" id="ahi" />&nbsp;
+		<label for="pound"> Ahi Fillet (US$10/lb)</label>
+		<br>
+		<input type="checkbox" class="input" id="mahi" />&nbsp;
+		<label for="pound"> Mahi Fillet (US$10/lb)</label>
+		<br> 
+		<input type="checkbox" class="input" id="ahi" />&nbsp;
+		<label for="pound"> Ahi Poke (US$10/lb)</label>
+		<br>
+		<input type="checkbox" class="input" id="mahi" />&nbsp;
+		<label for="pound"> Ahi Sashimi (US$10/lb)</label>
+	</div>
+
+	<div class="row">
+		<label for="pound">Pounds per week &nbsp;</label>
+		<input type="number" class="input" id="weight" style="width:60px;" />
+	</div>
+
+	<br>
+	<div class="row">Also deliver:
+		<br>&nbsp;&nbsp;
+		<input type="checkbox" class="input" id="eggs" />&nbsp;
+		<label for="pound"> 6 Eggs (US$2)</label>
+		<br>&nbsp;&nbsp;
+		<input type="checkbox" class="input" id="lettucetomatoes" />&nbsp;
+		<label for="pound"> 1 Lettuce + 4 tomatoes (US$2)</label>
+	</div>
+
+	<br>
+	<div class="row">
+		<input type="checkbox" class="input" id="onetime" />&nbsp;
+		<label for="pound"> One Time</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type="checkbox" class="input" id="weekly" />&nbsp;
+		<label for="pound"> Weekly</label>
+	</div>
+
+	<br>
+	<div class="row">
+		<label for="pound">Delivering Address &nbsp;</label>
+		<select id="address" data-inline="true" data-mini="true" data-icon="arrow-d" data-iconpos="right" data-native-menu="true">
+			<option value="The BoxJelly">The BoxJelly</option>
+			<option value="Blue Startups">Proto Hub</option>
+			<option value="My Address">My Address</option>
+		</select>
+	</div>
+
+	<div class="row">
+		<label for="pound">Or My Address &nbsp;</label>
+		<textarea type="" class="input" id="myaddress" required />
+	</div>
+
+
+	<div class="row">
+		<label for="pound">City &nbsp;</label>
+		<select id="city" data-inline="true" data-mini="true" data-icon="arrow-d" data-iconpos="right" data-native-menu="true">
+			<option value="Honolulu, HI" selected="selected">Honolulu, Oahu
+			</option>
+			<option value="Kanehoe, HI">Kanehoe, Oahu</option>
+			<option value="Kahului, HI">Kahului, Maui</option>
+			<option value="Half Moon Bay, San Francisco, CA">Half Moon Bay, San Francisco</option>
+			<option value="Fishermen Wharf, San Francisco, CA">Fishermen Wharf, San Francisco</option>
+			<option value="Sea Port Village, San Diego, CA">Sea Port Village, San Diego</option>
+		</select>
+	</div>
+
+
+	<div class="row">
+		<label for="pound">Phone &nbsp;</label>
+		<input type="" class="input" id="phone" required />
+	</div>
+
+	<br>
+	<div class="row">
+		<label for="pound">Notes &nbsp;</label>
+		<textarea type="" class="input" id="notes" required />
+	</div>
+
+	<br>
+	<div class="row" id="total">
+		<label for="pound">TOTAL &nbsp;</label>
+		US$10.00
+	</div>
+
+	<br>
+	<div class="row center" style=" margin: 1%; text-align: center !important;">
+		<input type="button" class="btn" value="Pay" onclick=save(); />
+
+
+		<!--	<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+			<input type="hidden" name="cmd" value="_s-xclick">
+			<input type="hidden" name="currency_code" value="USD">
+			<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
+			<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+			<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+		</form>-->
+
+	</div>
+
+
+</div>
+
+<script>
+	function getUserSubscription(email) {
+
+		var getUserUrl = "http://fresh.freshfishalerts.appspot.com/getuser?email=" + email;
+
+		$.post(getUserUrl, {}, function(data, status) {
+
+			var user = jQuery.parseJSON(data);
+
+			$("#contactName").val(user.contactName);
+			$("#city").val(user.city);
+			$("#phone").val(user.phone);
+		});
+
+		var getUrl = "http://fresh.freshfishalerts.appspot.com/getsubscriber?email=" + email;
+
+		$.post(getUrl, {}, function(data, status) {
+
+			var user = jQuery.parseJSON(data);
+
+			$("#address").val(user.address);
+			$("#ahi").prop('checked', ((user.ahi) == "true"));
+			$("#mahi").prop('checked', ((user.mahi) == "true"));
+			$("#weight").val(user.weight);
+			$("#notes").val(user.notes);
+		});
+	}
+
+
+	var user = getUrlParameter("user");
+	$("#email").val(user);
+	getUserSubscription(user);
+
+	function save() {
+
+
+		var saveUserUrl = "http://fresh.freshfishalerts.appspot.com/saveuser?email=" + encodeURIComponent($("#email").val()) + "&contactName=" + encodeURIComponent($("#contactName").val()) + "&phone=" + encodeURIComponent($("#phone").val()) + "&city=" + encodeURIComponent($("#city").val());
+
+		$.post(saveUserUrl, {}, function(data, status) {
+
+		});
+
+		var saveUrl = "http://fresh.freshfishalerts.appspot.com/savesubscriber?email=" + encodeURIComponent($("#email").val()) + "&contactName=" + encodeURIComponent($("#contactName").val()) + "&ahi=" + encodeURIComponent($("#ahi").prop('checked')) + "&mahi=" + encodeURIComponent($("#mahi").prop('checked')) + "&weight=" + encodeURIComponent($("#weight").val()) + "&notes=" + encodeURIComponent($("#notes").val()) + "&phone=" + encodeURIComponent($("#phone").val()) + "&address=" + encodeURIComponent($("#address").val()) + "&city=" + encodeURIComponent($("#city").val());
+
+		$.post(saveUrl, {}, function(data, status) {
+
+			document.cookie = "user=" + $("#email").val() + ";";
+
+			alert("Thank you for subscribing for Freshr.");
+			window.location.href = './?user=' + encodeURIComponent($("#email").val());
+
+		});
+		
+		var paypalURL =  'https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=FYBLVJYMP2AXE&lc=US&item_name=Freshr%20Items&amount=10%2e00&currency_code=USD&button_subtype=services&bn=PP%2dBuyNowBF%3abtn_buynowCC_LG%2egif%3aNonHosted';
+		window.open(paypalURL,'_blank');
+	}
+</script>
